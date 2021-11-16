@@ -2,7 +2,7 @@
 var express = require('express');
 var router = express.Router();
 
-// var projectModel =  require("../models/projects");
+var projectModel =  require("../models/projects");
 
 router.get('/', function(req, res, next) {
     res.send('tasks and projects');
