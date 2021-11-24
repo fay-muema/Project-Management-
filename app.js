@@ -9,7 +9,9 @@ mongoose.connect('mongodb://localhost/CRM')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-// var loginRouter = require('./routes/loginDetails');
+var projectsRouter = require('./routes/projects');
+var tasksRouter = require('./routes/task');
+
 
 var app = express();
 
@@ -25,7 +27,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-// app.use('/loginDetails', loginRouter);
+app.use('/projects',projectsRouter)
+app.use('/task',tasksRouter)
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,13 +1,13 @@
 const mongoose = require ("mongoose");
 
-let projectSchema = mongoose.Schema({
+var projectSchema = mongoose.Schema({
 
     title: String,
-    status: Int16Array,
+    status: Number,
     due_date: String,
     project_id: String,
     assigned: String,
-    // tags: [String],
+    tags: [String],
     created_by: String
 
 })

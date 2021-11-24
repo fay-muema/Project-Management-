@@ -37,28 +37,6 @@ else{
 }
 })
 
-  // let loginDetails = new userModel({
-    // email:"faithmuema@gmail.com",
-    // password:"1234"
-    
-  // });
-  // loginDetails.find({...loginDetails},(err,user)=>{
-  //   if (err)
-  //   res.send({error:'Not successfull'})  
-  // else{
-  //   res.send({data:{fullname:loginDetails.fullname,email:loginDetails.email,_id:loginDetails._id}});
-  // }
-  // })
-
-  // loginDetails.findOne(function(err, loginDetails){
-  //   if (err)
-  //   res.send(err)  
-  //   else
-  //   res.send({message: "LogIn is Successful", loginObj: loginDetails});
-    
-    
-  // });
-  
 });
 
 
