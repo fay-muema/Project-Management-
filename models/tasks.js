@@ -1,13 +1,18 @@
 const mongoose = require('mongoose');
 
+
+
 let taskSchema = mongoose.Schema({
-    title: String,
-    type: String,
-    color: String,
-    members: [String],
-    due_date: String,
-    created_by: String,
-    project_id: String,
+title: String,
+status: Number,
+due_date: String,
+project_id:String,
+assigned: Number,
+tags:  [String],
+start_date: String,
+
+created_by: Number
+    
 });
 let taskModel = mongoose.model('Tasks', taskSchema);
 module.exports = taskModel;

@@ -10,46 +10,65 @@ router.get('/', function(req, res, next) {
 
 router.post('/add/:project_id', function(req, res, next) {
     let tasks = new taskModel({
-        title: req.body.title,
-        type: req.body.type,
-        due_date: req.body.due_date,
-        color: req.body.color,
-        members: req.body.members,
-        created_by: req.body.created_by,
+
+    
+        title: req.body.id,
+        status: req.body.status,
+        due_date:req.body.due_date,
         project_id: req.params.project_id,
+        assigned: req.body.assigned,
+        tags:  [],
+        created_by: req.body._id,
+      
+        start_date:req.body.start_date
     });
 
     tasks.save(function(err, tasks) {
-        if (err) res.send({ error: 'task not added!!' });
+        if (err) res.send({ error: 'task not added!!',err });
         else {
             res.send({
-                data: {
-                    title: tasks.title,
-                    type: tasks.type,
-                    due_date: tasks.due_date,
-                    color: tasks.color,
-                    members: tasks.members,
-                    created_by: tasks.created_by,
-                },
+                data: tasks
+                
             });
         }
     });
 });
 //del task
-router.delete('/deleteTask', function(req, res, next) {
-    taskModel.findByIdAndDelete({ _id: req.body.id }, function(err, response) {
-        if (err) res.send(err);
-        else res.send({ resultsFound: response.length, task_id: response });
-    });
+router.delete('/:id', function(req, res, next) {
+    taskModel.findByIdAndDelete({ _id: req.params.id },
+        function(err, response) {
+            if (err) res.send({error:"could not delete"});
+            else
+                res.send({
+                    data: response,
+                });
+        }
+    );
+});
+//find user
+
+router.get('findUser', function(req, res, next) {
+    taskModel.findOne({email:email},
+        function(err, response) {
+            if (err) res.send({error:"could not find user!!!"});
+            else
+                res.send({
+                    data: response,
+                });
+        }
+    );
 });
 //update task
-
-router.put('/update', function(req, res, next) {
-    const id = req.query.taskId;
-    const task = req.query.taskId;
-    taskModel.update(id, { taskId: task }, function(err, response) {
-        if (err) res.send(err);
-        else res.send({ resultsFound: response.length, id: response });
+router.put('/:id', function(req, res, next) {
+    const id = req.params.id;
+    // {title:'New Title',due_}
+    taskModel.findOneAndUpdate({ _id: id }, req.body, (err, p) => {
+        if (err) {
+            res.send({ err: 'project not updated' });
+        } else {
+            console.log(p);
+            res.send({ data: p });
+        }
     });
 });
 module.exports = router;

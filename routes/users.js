@@ -28,16 +28,28 @@ router.post('/register', function(req, res, next) {
   
 });
 
-router.post('/login', function(req, res, next) {
-userModel.findOne({    email:req.body.email,password:req.body.password},(err, user)=>{
-  if (err)
-  res.send({error:'Not successfull'})  
-else{
-  res.send({data:{fullname:user.fullname,email:user.email,_id:user._id}});
-}
-})
+router.post("/login", async(req, res, next) => {
+  try{
+    const users = await user.findByCredentials(req.body.email, req.body.password);
+    res.send({user});
+  }
 
+catch(e) {
+  res.status(400).send({
+    error: "invalid username"
+  });
+}
 });
+// router.post('/login', function(req, res, next) {
+// userModel.findByCredentials({ email:req.body.email,password:req.body.password},(err, user)=>{
+//   if (err)
+//   res.send({error:'invalid userame'})  
+// else{
+//   res.send({data:{fullname:user.fullname,email:user.email,_id:user._id}});
+// }
+// })
+
+// });
 
 
 module.exports = router;

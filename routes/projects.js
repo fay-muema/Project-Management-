@@ -49,7 +49,7 @@ router.post('/add', function(req, res, next) {
 router.delete('/:id', function(req, res, next) {
     projectModel.findByIdAndDelete({ _id: req.params.id },
         function(err, response) {
-            if (err) res.send(err);
+            if (err) res.send({error:"could not delete"});
             else
                 res.send({
                     data: response,
