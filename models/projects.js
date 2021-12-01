@@ -5,8 +5,8 @@ var projectSchema = mongoose.Schema({
     type: String,
     color: String,
     due_date: String,
-    members: [String],
-    tags: [String],
+    members: [{ fullname: String, user_id: String }],
+    tags: [{ id: String, title: String, color: String }],
     created_by: String,
 });
 let projectModel = mongoose.model('Projects', projectSchema);

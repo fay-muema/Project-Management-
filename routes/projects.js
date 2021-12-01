@@ -4,14 +4,16 @@ var router = express.Router();
 
 var projectModel = require('../models/projects');
 
-router.get('/', function(req, res, next) {
-    projectModel.find({}, (err, items) => {
-        if (err) {
-            res.send({ error: 'Error getting projects' });
-        } else {
-            res.send({ data: items });
+router.get('/myprojects/:id', function(req, res, next) {
+    projectModel.find({ members: { $elemMatch: { user_id: req.params.id } } },
+        (err, items) => {
+            if (err) {
+                res.send({ error: 'Error getting projects' });
+            } else {
+                res.send({ data: items });
+            }
         }
-    });
+    );
 });
 
 //get project by id
@@ -32,8 +34,8 @@ router.post('/add', function(req, res, next) {
         type: req.body.type,
         color: req.body.color,
         due_date: req.body.due_date,
-        tags: [],
-        members: [req.body.created_by],
+        tags: req.body.tags,
+        members: req.body.members,
         created_by: req.body.created_by,
     });
 
@@ -49,7 +51,7 @@ router.post('/add', function(req, res, next) {
 router.delete('/:id', function(req, res, next) {
     projectModel.findByIdAndDelete({ _id: req.params.id },
         function(err, response) {
-            if (err) res.send({error:"could not delete"});
+            if (err) res.send({ error: 'could not delete' });
             else
                 res.send({
                     data: response,
@@ -63,14 +65,16 @@ router.delete('/:id', function(req, res, next) {
 router.put('/:id', function(req, res, next) {
     const id = req.params.id;
     // {title:'New Title',due_}
-    projectModel.findOneAndUpdate({ _id: id }, req.body, (err, p) => {
-        if (err) {
-            res.send({ err: 'project not updated' });
-        } else {
-            console.log(p);
-            res.send({ data: p });
+    projectModel.findOneAndUpdate({ _id: id },
+        req.body, { new: true },
+        (err, p) => {
+            if (err) {
+                res.send({ err: 'project not updated' });
+            } else {
+                res.send({ data: p });
+            }
         }
-    });
+    );
 });
 
 module.exports = router;

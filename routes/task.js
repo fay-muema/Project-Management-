@@ -3,32 +3,47 @@ var router = express.Router();
 
 var taskModel = require('../models/tasks');
 
+router.get('/mytasks/:arr', (req, res) => {
+    taskModel.find({ project_id: { $in: [...JSON.parse(req.params.arr)] } },
+        (err, items) => {
+            if (err) {
+                res.send({ error: 'Error getting projects' });
+            } else {
+                res.send({ data: items });
+            }
+        }
+    );
+});
+
 router.get('/', function(req, res, next) {
-    res.send('tasks');
+    taskModel.find({}, (err, items) => {
+        if (err) {
+            res.send({ error: 'Error getting tasks' });
+        } else {
+            res.send({ data: items });
+        }
+    });
 });
 //add task/:projectID
 
-router.post('/add/:project_id', function(req, res, next) {
+router.post('/add', function(req, res, next) {
     let tasks = new taskModel({
-
-    
-        title: req.body.id,
+        title: req.body.title,
         status: req.body.status,
-        due_date:req.body.due_date,
-        project_id: req.params.project_id,
-        assigned: req.body.assigned,
-        tags:  [],
-        created_by: req.body._id,
-      
-        start_date:req.body.start_date
+        due_date: req.body.due_date,
+        project_id: req.body.project_id,
+        assigned: null,
+        tags: [],
+        created_by: req.body.created_by,
+
+        start_date: req.body.start_date,
     });
 
     tasks.save(function(err, tasks) {
-        if (err) res.send({ error: 'task not added!!',err });
+        if (err) res.send({ error: 'task not added!!', err });
         else {
             res.send({
-                data: tasks
-                
+                data: tasks,
             });
         }
     });
@@ -37,7 +52,7 @@ router.post('/add/:project_id', function(req, res, next) {
 router.delete('/:id', function(req, res, next) {
     taskModel.findByIdAndDelete({ _id: req.params.id },
         function(err, response) {
-            if (err) res.send({error:"could not delete"});
+            if (err) res.send({ error: 'could not delete' });
             else
                 res.send({
                     data: response,
@@ -48,27 +63,28 @@ router.delete('/:id', function(req, res, next) {
 //find user
 
 router.get('findUser', function(req, res, next) {
-    taskModel.findOne({email:email},
-        function(err, response) {
-            if (err) res.send({error:"could not find user!!!"});
-            else
-                res.send({
-                    data: response,
-                });
-        }
-    );
+    taskModel.findOne({ email: email }, function(err, response) {
+        if (err) res.send({ error: 'could not find user!!!' });
+        else
+            res.send({
+                data: response,
+            });
+    });
 });
 //update task
 router.put('/:id', function(req, res, next) {
     const id = req.params.id;
     // {title:'New Title',due_}
-    taskModel.findOneAndUpdate({ _id: id }, req.body, (err, p) => {
-        if (err) {
-            res.send({ err: 'project not updated' });
-        } else {
-            console.log(p);
-            res.send({ data: p });
+    taskModel.findOneAndUpdate({ _id: id },
+        req.body, { new: true },
+        (err, p) => {
+            if (err) {
+                res.send({ err: 'task not updated', err });
+            } else {
+                console.log(p);
+                res.send({ data: p });
+            }
         }
-    });
+    );
 });
 module.exports = router;
