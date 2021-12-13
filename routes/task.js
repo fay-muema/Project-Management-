@@ -60,29 +60,18 @@ router.delete('/:id', function(req, res, next) {
         }
     );
 });
-//find user
 
-router.get('findUser', function(req, res, next) {
-    taskModel.findOne({ email: email }, function(err, response) {
-        if (err) res.send({ error: 'could not find user!!!' });
-        else
-            res.send({
-                data: response,
-            });
-    });
-});
 //update task
 router.put('/:id', function(req, res, next) {
     const id = req.params.id;
-    // {title:'New Title',due_}
+
     taskModel.findOneAndUpdate({ _id: id },
         req.body, { new: true },
-        (err, p) => {
+        (err, t) => {
             if (err) {
                 res.send({ err: 'task not updated', err });
             } else {
-                console.log(p);
-                res.send({ data: p });
+                res.send({ data: t });
             }
         }
     );

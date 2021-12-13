@@ -63,7 +63,6 @@ router.get('/userID/:userID', async(req, res) => {
                 res.send({ error: 'No such user' });
             } else {
                 res.send({ data: user });
-                console.log(user);
             }
         });
     } catch (e) {

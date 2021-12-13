@@ -3,6 +3,8 @@ var express = require('express');
 var router = express.Router();
 
 var projectModel = require('../models/projects');
+const taskModel = require('../models/tasks');
+const { Chat } = require('./chats');
 
 router.get('/myprojects/:id', function(req, res, next) {
     projectModel.find({ members: { $elemMatch: { user_id: req.params.id } } },
@@ -52,10 +54,14 @@ router.delete('/:id', function(req, res, next) {
     projectModel.findByIdAndDelete({ _id: req.params.id },
         function(err, response) {
             if (err) res.send({ error: 'could not delete' });
-            else
+            else {
+                taskModel.deleteMany({ project_id: req.params.id });
+                Chat.deleteMany({ project_id: req.params.id });
+
                 res.send({
-                    data: response,
+                    data: req.params.id,
                 });
+            }
         }
     );
 });
